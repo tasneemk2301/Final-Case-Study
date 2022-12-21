@@ -1,0 +1,10 @@
+POST http://localhost:3000/app/v1/flight/admin/login
+content-type: application/json
+
+{
+    "username": "mike", 
+    "password": "mike"
+}
+
+
+###
