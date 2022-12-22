@@ -8,3 +8,35 @@ content-type: application/json
 
 
 ###
+
+POST http://localhost:3000/app/v1/airline/flight
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pa2UiLCJpYXQiOjE2NzE2NzM3MTQsImV4cCI6MTY3MTc2MDExNH0.4vgaAVR611VD43XGQ6V5kTofLFTC7WYZsWqhub19qHw
+content-type: application/json
+
+{
+
+    "flight_number" : "dp234",
+
+    "airline_id" : 21,
+
+    "from_place" : "delhi",
+
+    "to_place" : "pune",
+
+    "start_time" : "10:35",
+
+    "end_time" : "13:45",
+
+    "total_number_of_business_class_seats" : "50",
+
+    "total_number_of_nonbusiness_class_seats" : "50",
+
+    "ticket_cost" : "5000",
+
+    "total_number_of_seats" : "100",
+
+    "meal" : "veg"
+
+}
+
+###
