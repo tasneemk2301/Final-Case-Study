@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AdminModule } from './admin/admin.module';
 import { FlightsModule } from './flights/flights.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -19,9 +20,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     database: 'flightbooking', 
     entities: [],
     autoLoadEntities: true,
-    synchronize: true
+    synchronize:true
   }), AdminModule, AuthModule, FlightsModule],
   controllers: [AppController],
   providers: [AppService, AdminService, JwtService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}

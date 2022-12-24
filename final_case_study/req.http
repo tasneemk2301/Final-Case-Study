@@ -10,22 +10,22 @@ content-type: application/json
 ###
 
 POST http://localhost:3000/app/v1/airline/flight
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pa2UiLCJpYXQiOjE2NzE2NzM3MTQsImV4cCI6MTY3MTc2MDExNH0.4vgaAVR611VD43XGQ6V5kTofLFTC7WYZsWqhub19qHw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pa2UiLCJpYXQiOjE2NzE4NjczNzEsImV4cCI6MTY3MTk1Mzc3MX0.xNJ4alhcR6tc0T4SSG1-TAl3H073IpVAipxrH2Cg9sY
 content-type: application/json
 
 {
 
-    "flight_number" : "dp234",
+    "flight_number" : "ge789",
 
-    "airline_id" : 21,
+    "airline_id" : 2,
 
     "from_place" : "delhi",
 
     "to_place" : "pune",
 
-    "start_time" : "10:35",
+    "start_time" : "17:00",
 
-    "end_time" : "13:45",
+    "end_time" : "20:10",
 
     "total_number_of_business_class_seats" : "50",
 
@@ -38,5 +38,75 @@ content-type: application/json
     "meal" : "veg"
 
 }
+
+###
+
+POST http://localhost:3000/app/v1/airline
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pa2UiLCJpYXQiOjE2NzE4NjczNzEsImV4cCI6MTY3MTk1Mzc3MX0.xNJ4alhcR6tc0T4SSG1-TAl3H073IpVAipxrH2Cg9sY
+content-type: application/json
+
+{
+    "name" : "indigo"
+}
+
+
+###
+
+PUT http://localhost:3000/app/v1/airline/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pa2UiLCJpYXQiOjE2NzE4NjczNzEsImV4cCI6MTY3MTk1Mzc3MX0.xNJ4alhcR6tc0T4SSG1-TAl3H073IpVAipxrH2Cg9sY
+content-type: application/json
+
+{
+    "name" : "indigo",
+    "blocked": "yes",
+    "id": 1
+}
+
+
+###
+
+GET http://localhost:3000/app/v1/flight/search
+content-type: application/json
+
+{
+    "date": "23/02/2023",
+    "from_place": "delhi",
+    "to_place": "pune",
+    "round_trip": "yes"
+}
+
+###
+
+POST http://localhost:3000/app/v1/flight/booking/1
+content-type: application/json
+
+{
+
+    "flight_id": 1,
+
+    "booked_by": "mahesh",
+
+    "email": "mahesh@gmail.com",
+
+    "number_of_seats": 2,
+
+    "passengers": [
+        {"name": "ramesh", "age": 24, "gender": "male"},
+        {"name": "suresh", "age": 22, "gender": "male"}],
+
+    "selected_meal": "veg",
+
+    "selected_seat_number": null
+
+}
+
+
+###
+
+GET http://localhost:3000/app/v1/flights
+
+###
+
+GET http://localhost:3000/app/v1/join
 
 ###

@@ -1,9 +1,16 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Airline } from './airline.entity';
 
 @Entity()
 export class Flight {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  flight_id:number;
+
+  @Column()
   airline_id: number;
+
+  @ManyToOne(() => Airline, (airline:Airline) => airline.flights)
+  airline: Airline;
 
   @Column()
   flight_number: string;
