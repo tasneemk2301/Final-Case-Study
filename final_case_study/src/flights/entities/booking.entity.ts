@@ -1,14 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
 import { passengerDto } from '../dto/passenger.dto';
-
 
 @Entity()
 export class Booking {
 
-    // @PrimaryGeneratedColumn()
-    // id:number;
+    @PrimaryGeneratedColumn()
+    id:number;
 
-    @PrimaryGeneratedColumn('uuid')
+    @Column()
     pnr: string;
 
     @Column()
@@ -23,13 +22,13 @@ export class Booking {
     @Column()
     number_of_seats: number;
 
-    @Column({default:""})
-    passengers: string;
+    @Column('json')
+    passengers: passengerDto[];
 
     @Column()
     selected_meal: string;
 
-    @Column()
+    @Column({nullable:true})
     selected_seat_number: string;
 
     @Column({ default: "active" })

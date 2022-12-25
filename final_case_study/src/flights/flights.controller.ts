@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, ConflictException, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Airline } from './entities/airline.entity';
 import { Flight } from './entities/flight.entity';
 import { FlightsService } from './flights.service';
 import { searchDto } from './dto/search.dto';
 import { Booking } from './entities/booking.entity';
+import { Response } from 'express';
 
 @Controller('/app/v1')
 export class FlightsController {
@@ -64,16 +65,55 @@ export class FlightsController {
             throw new Error("No flights found.");
         }
     }
+
     @Post('/flight/booking/:flightid')
     async bookFlight(@Param('flightid', ParseIntPipe) flightid:number, @Body() booking:Booking){
         try{
-            console.log(booking);
             const booking_details= this._flightservice.createBooking(flightid, booking);
             return booking_details;
 
         }catch(e){
             throw new Error("Error in booking");
         }
+    }
+
+    @Get('/flight/ticket/:pnr')
+    async getTicket(@Param('pnr') pnr:string){
+        try{
+            const ticket_details= this._flightservice.getTicketDetails(pnr);
+            return ticket_details;
+
+        }catch(e){
+            throw new Error("Error in pnr");
+        }
+
+    }
+
+    @Get('/flight/booking/history/:emailId')
+    async getHistory(@Param('emailId') emailId:string){
+        try{
+            const history_details= this._flightservice.getHistoryDetails(emailId);
+            return history_details;
+
+        }catch(e){
+            throw new Error("Error in email ID");
+        }
+
+    }
+
+    @Put('/flight/booking/cancel/:pnr')
+    async cancelBooking(@Param('pnr') pnr:string, @Res({passthrough:true}) res:Response){
+        try{
+            const booking= await this._flightservice.getBookingDetails(pnr);
+            if(!!booking){
+                console.log("Canceled Booking");
+                res.status(204);
+            }           
+
+        }catch(e){
+            throw new Error("Error in pnr");
+        }
+
     }
 
     @Get('/join')

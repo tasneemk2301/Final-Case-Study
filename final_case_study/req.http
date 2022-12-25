@@ -90,9 +90,7 @@ content-type: application/json
 
     "number_of_seats": 2,
 
-    "passengers": [
-        {"name": "ramesh", "age": 24, "gender": "male"},
-        {"name": "suresh", "age": 22, "gender": "male"}],
+    "passengers": [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
 
     "selected_meal": "veg",
 
@@ -100,6 +98,17 @@ content-type: application/json
 
 }
 
+###
+
+GET http://localhost:3000/app/v1/flight/ticket/abc301
+
+###
+
+GET http://localhost:3000/app/v1/flight/booking/history/mahesh@gmail.com
+
+###
+
+PUT http://localhost:3000/app/v1/flight/booking/cancel/abc779
 
 ###
 

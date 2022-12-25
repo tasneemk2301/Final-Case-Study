@@ -13,7 +13,7 @@ export class FlightsService{
         private flightsRepository: Repository<Flight>,
         @InjectRepository(Airline)
         private airlineRepository: Repository<Airline>,
-        @InjectRepository(Airline)
+        @InjectRepository(Booking)
         private bookingRepository: Repository<Booking>
       ) {}
 
@@ -87,14 +87,51 @@ export class FlightsService{
 
       async createBooking(flightid:number, booking:Booking): Promise<any>{
         const flight= await this.findByFlightId(flightid);
-        console.log(flight);
+        const pnr= "abc"+ Math.floor(Math.random()*999);
         if (!!flight){
-          const savedBooking= await this.bookingRepository.save(booking);
-          return savedBooking;
+          const savedBooking= await this.bookingRepository.save({...booking,pnr});
+          console.log(savedBooking);
+          return ({"pnr": pnr});
         }
         else {
           throw new Error("Error while creating booking. Invalid Flight ID"); 
         }
+      }
+
+      async getTicketDetails(pnr: string): Promise<Booking>{
+          const ticket= await this.bookingRepository.findOneBy({pnr});
+          if(!!ticket){
+            return ticket;
+          }
+          else{
+            throw new Error("Error while fetching ticket details");
+          }
+
+      }
+
+      async getHistoryDetails(emailId:string):Promise<Booking[]>{
+        const history= await this.bookingRepository.findBy({email:emailId});
+        if(history.length>0){
+          return history;
+        }
+        else{
+          throw new Error("Error while fetching history details");
+        }
+      }
+
+      async getBookingDetails(pnr:string){
+        // try{
+          const cancel_booking= await this.bookingRepository.findOneBy({pnr});
+          if(!!cancel_booking){
+            await this.bookingRepository.delete({pnr:pnr});
+            return true;
+          }
+          else{
+            throw new Error("Error while fetching booking details");
+          }
+        // }catch(e){
+        //   throw new 
+        // }
       }
 
 }
