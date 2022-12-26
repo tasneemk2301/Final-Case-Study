@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
-import { AuthService } from './auth/auth.service';
 import { AdminService } from './admin/admin.service';
 import { JwtService } from '@nestjs/jwt';
 import { AdminModule } from './admin/admin.module';
@@ -10,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
+    imports: [TypeOrmModule.forRoot({
     type: 'mysql',
     host: 'localhost',
     port: 3306,

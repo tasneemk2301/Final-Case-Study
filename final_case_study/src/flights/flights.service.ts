@@ -119,7 +119,7 @@ export class FlightsService{
             return true;
           }
           else{
-            throw new Error("Error while fetching booking details");
+            throw new Error("Error while fetching booking details for cancellation");
           }
       }
 

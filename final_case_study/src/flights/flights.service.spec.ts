@@ -11,6 +11,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Flight } from './entities/flight.entity';
 import { Airline } from './entities/airline.entity';
 import { flatten } from '@nestjs/common';
+import { Booking } from './entities/booking.entity';
 
 describe('FlightsService', () => {
   let service: FlightsService;
@@ -18,6 +19,8 @@ describe('FlightsService', () => {
   let repoFlight: Repository<Flight>;
 
   let repoAirline: Repository<Airline>;
+
+  let repoBooking: Repository<Booking>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -33,12 +36,13 @@ describe('FlightsService', () => {
             synchronize:true
           }), AdminModule, AuthModule, FlightsModule],
           controllers: [AppController],
-          providers: [AdminService, JwtService, FlightsService, {provide: getRepositoryToken(Flight), useClass: Repository,}, {provide: getRepositoryToken(Airline), useClass: Repository,},],
+          providers: [AdminService, JwtService, FlightsService, {provide: getRepositoryToken(Flight), useClass: Repository,}, {provide: getRepositoryToken(Airline), useClass: Repository,}, {provide: getRepositoryToken(Booking), useClass: Repository,},],
     }).compile();
 
     service = module.get<FlightsService>(FlightsService);
     repoFlight = module.get<Repository<Flight>>(getRepositoryToken(Flight));
     repoAirline = module.get<Repository<Airline>>(getRepositoryToken(Airline));
+    repoBooking = module.get<Repository<Booking>>(getRepositoryToken(Booking));
   });
 
   it('should be defined', () => {
@@ -362,5 +366,252 @@ describe('FlightsService', () => {
     expect(res).toEqual(flights);
 
   });
+
+  it("should create booking and return pnr ", async() =>{
+
+    const flight:any = {
+
+        flight_id: 1,
+
+        airline: {name: 'garuda', blocked: 'no', id: 2},
+
+        flight_number : "ge789",
+    
+        airline_id : 2,
+    
+        from_place : "delhi",
+    
+        to_place : "pune",
+    
+        start_time : "17:00",
+    
+        end_time : "20:10",
+    
+        total_number_of_business_class_seats : "50",
+    
+        total_number_of_nonbusiness_class_seats : "50",
+    
+        ticket_cost : "5000",
+    
+        total_number_of_seats : "100",
+    
+        meal : "veg"
+    
+    };
+
+    const booking:any = {
+
+        flight_id: 1,
+    
+        booked_by: "mahesh",
+    
+        email: "mahesh@gmail.com",
+    
+        number_of_seats: 2,
+    
+        passengers: [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
+    
+        selected_meal: "veg",
+    
+        selected_seat_number: null
+    
+    };
+
+    const booked:any = {
+
+        id: 1,
+
+        pnr: "abc816",
+
+        flight_id: 1,
+    
+        booked_by: "mahesh",
+    
+        email: "mahesh@gmail.com",
+    
+        number_of_seats: 2,
+    
+        passengers: [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
+    
+        selected_meal: "veg",
+    
+        selected_seat_number: null,
+
+        status: "active"
+    
+    };
+
+    jest.spyOn(service, "findByFlightId").mockImplementation(() => flight);
+
+    jest.spyOn(repoBooking, "save").mockImplementation(() => booked);
+
+    let res: any = await service.createBooking(1, booking);
+
+    expect(res).toHaveProperty("pnr");
+
+  });
+
+  it("should return error when flight Id not valid while booking", async() => {
+
+    const booking:any = {
+
+        flight_id: 4,
+    
+        booked_by: "mahesh",
+    
+        email: "mahesh@gmail.com",
+    
+        number_of_seats: 2,
+    
+        passengers: [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
+    
+        selected_meal: "veg",
+    
+        selected_seat_number: null
+    
+    };
+
+    const invalid:any = "";
+
+    jest.spyOn(service, "findByFlightId").mockImplementation(() => invalid);
+    
+    await expect(service.createBooking(4, booking)).rejects.toThrowError("Error while creating booking. Invalid Flight ID");
+    
+  });
+
+  it("should return ticket by pnr", async() => {
+
+    const ticket:any = {
+
+        id: 1,
+
+        pnr: "abc816",
+
+        flight_id: 1,
+    
+        booked_by: "mahesh",
+    
+        email: "mahesh@gmail.com",
+    
+        number_of_seats: 2,
+    
+        passengers: [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
+    
+        selected_meal: "veg",
+    
+        selected_seat_number: null,
+
+        status: "active"
+    
+    };
+
+    jest.spyOn(repoBooking, "findOneBy").mockImplementation(() => ticket);
+
+    let res:any = await service.getTicketDetails("abc816");
+
+    expect(res).toEqual(ticket);
+
+  });
+
+  it("should return error when fetching ticket by wrong pnr", async() => {
+
+    const invalid:any = "";
+
+    jest.spyOn(repoBooking, "findOneBy").mockImplementation(() => invalid);
+
+    await expect(service.getTicketDetails("abc676")).rejects.toThrowError("Error while fetching ticket details");
+
+  });
+
+  it("should return history by email", async() => {
+
+    const ticket_history:any = {
+
+        id: 1,
+
+        pnr: "abc816",
+
+        flight_id: 1,
+    
+        booked_by: "mahesh",
+    
+        email: "mahesh@gmail.com",
+    
+        number_of_seats: 2,
+    
+        passengers: [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
+    
+        selected_meal: "veg",
+    
+        selected_seat_number: null,
+
+        status: "active"
+    
+    };
+
+    jest.spyOn(repoBooking, "findBy").mockImplementation(async() => [ticket_history]);
+
+    let res:any = await service.getHistoryDetails("mahesh@gmail.com");
+
+    expect(res).toEqual([ticket_history]);
+
+  });  
+
+  it("should return error when history is looked by wrong email", async() => {
+
+    const invalid:any = ""
+       
+    jest.spyOn(repoBooking, "findBy").mockImplementation(() => invalid);
+
+    await expect(service.getHistoryDetails("jyoti@gmail.com")).rejects.toThrowError("Error while fetching history details");
+
+  });
+
+  it("should cancel booking by pnr", async() => {
+       
+    const booking:any = {
+
+        id: 1,
+
+        pnr: "abc816",
+
+        flight_id: 1,
+    
+        booked_by: "mahesh",
+    
+        email: "mahesh@gmail.com",
+    
+        number_of_seats: 2,
+    
+        passengers: [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
+    
+        selected_meal: "veg",
+    
+        selected_seat_number: null,
+
+        status: "active"
+    
+    };
+
+    jest.spyOn(repoBooking, "findOneBy").mockImplementation(() => booking);
+
+    jest.spyOn(repoBooking, "delete").mockImplementation(() => void 0);
+
+    let res:any = await service.getBookingDetails("abc816");
+
+    expect(res).toBe(true);
+
+  });
+
+  it("should return error when cancelling booking by wrong pnr", async() => {
+       
+    const invalid:any = "";
+
+    jest.spyOn(repoBooking, "findOneBy").mockImplementation(() => invalid);
+
+    await expect(service.getBookingDetails("abc923")).rejects.toThrowError("Error while fetching booking details for cancellation");
+
+  });
+
 
 });
