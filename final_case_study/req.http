@@ -23,9 +23,9 @@ content-type: application/json
 
     "to_place" : "pune",
 
-    "start_time" : "17:00",
+    "start_time" : "23/02/2023 17:00",
 
-    "end_time" : "20:10",
+    "end_time" : "23/02/2023 20:10",
 
     "total_number_of_business_class_seats" : "50",
 
@@ -109,13 +109,5 @@ GET http://localhost:3000/app/v1/flight/booking/history/mahesh@gmail.com
 ###
 
 PUT http://localhost:3000/app/v1/flight/booking/cancel/abc779
-
-###
-
-GET http://localhost:3000/app/v1/flights
-
-###
-
-GET http://localhost:3000/app/v1/join
 
 ###

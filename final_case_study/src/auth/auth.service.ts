@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { adminDto } from 'src/admin/admin.dto';
-import { AdminService } from 'src/admin/admin.service';
+import { AdminService } from '../../src/admin/admin.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()

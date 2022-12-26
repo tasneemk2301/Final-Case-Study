@@ -17,18 +17,6 @@ export class FlightsService{
         private bookingRepository: Repository<Booking>
       ) {}
 
-      findAllFlights(): Promise<Flight[]> {
-        return this.flightsRepository.find();
-      }
-    
-      findByFlightId(flight_id: number): Promise<Flight> {
-        return this.flightsRepository.findOneBy({ flight_id });
-      }
-    
-      async remove(airline_id: number): Promise<void> {
-        await this.flightsRepository.delete(airline_id);
-      }
-
       async createFlight(flight:Flight): Promise<Flight>{
         const airline= await this.findByAirlineId(flight.airline_id);
         if (!!airline){
@@ -40,8 +28,21 @@ export class FlightsService{
         }
       }
 
-      updateFlight(flight_id:number, flight:Flight): Promise<any>{
-        return this.flightsRepository.update(flight_id, flight);
+      findAllFlights(): Promise<Flight[]> {
+        return this.flightsRepository.find();
+      }
+          
+      findByFlightId(flight_id: number): Promise<Flight> {
+        return this.flightsRepository.findOneBy({ flight_id });
+      }
+
+      updateFlight(flight_id:number, flight:Flight): any{
+        this.flightsRepository.update(flight_id, flight);
+        return 'Flight Updated';
+      }
+
+      async remove(airline_id: number): Promise<void> {
+        await this.flightsRepository.delete(airline_id);
       }
 
       addAirline(airline:Airline): Promise<Airline>{
@@ -52,20 +53,12 @@ export class FlightsService{
         return this.airlineRepository.findOneBy({ id });
       }
 
-      updateAirline(airline_id:number, airline:Airline): Promise<any>{
-        return this.airlineRepository.update(airline_id, airline);
+      updateAirline(airline_id:number, airline:Airline): any{
+        this.airlineRepository.update(airline_id, airline);
+        return "Airline Updated";
       }
 
-      joinQuery() {
-        // return this.flightsRepository.createQueryBuilder("flight")
-        // .select(['flight.flight_id','flight.flight_number'])
-        // .leftJoinAndSelect('flight.airline','airline')
-        // .getMany();
-        return this.flightsRepository.createQueryBuilder("flight")
-        .select(['flight.flight_id','flight.flight_number','airline.name AS airline'])
-        .leftJoin('flight.airline','airline')
-        .getRawMany();
-      }
+    
       async searchFlightDetails(search:searchDto): Promise<Flight[]>{
         return this.flightsRepository.createQueryBuilder("flight")
         .select(['flight.flight_id AS flight_id',
@@ -120,7 +113,6 @@ export class FlightsService{
       }
 
       async getBookingDetails(pnr:string){
-        // try{
           const cancel_booking= await this.bookingRepository.findOneBy({pnr});
           if(!!cancel_booking){
             await this.bookingRepository.delete({pnr:pnr});
@@ -129,9 +121,6 @@ export class FlightsService{
           else{
             throw new Error("Error while fetching booking details");
           }
-        // }catch(e){
-        //   throw new 
-        // }
       }
 
 }

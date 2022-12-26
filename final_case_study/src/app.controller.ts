@@ -1,13 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { adminDto } from './admin/admin.dto';
 import { AdminService } from './admin/admin.service';
-import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 
 @Controller('/app/v1')
 export class AppController {
-  constructor(private readonly _appService: AppService, private readonly _adminservice: AdminService, private readonly _authService: AuthService) {}
+  constructor( private readonly _adminservice: AdminService, private readonly _authService: AuthService) {}
 
   @Post('/flight/admin/login')
   @UseGuards(LocalAuthGuard)

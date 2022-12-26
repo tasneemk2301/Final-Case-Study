@@ -1,5 +1,5 @@
 import { Body, ConflictException, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../../src/auth/jwt-auth.guard';
 import { Airline } from './entities/airline.entity';
 import { Flight } from './entities/flight.entity';
 import { FlightsService } from './flights.service';
@@ -114,17 +114,6 @@ export class FlightsController {
             throw new Error("Error in pnr");
         }
 
-    }
-
-    @Get('/join')
-    async join(){
-        return await this._flightservice.joinQuery();
-    }
-
-    @Get('/flights')
-    async flights(){
-        const flights=this._flightservice.findAllFlights();
-        return flights;
     }
 
     
