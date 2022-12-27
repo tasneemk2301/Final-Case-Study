@@ -10,7 +10,6 @@ import { FlightsModule } from '../flights/flights.module';
 import { Repository, UpdateResult } from 'typeorm';
 import { Flight } from './entities/flight.entity';
 import { Airline } from './entities/airline.entity';
-import { flatten } from '@nestjs/common';
 import { Booking } from './entities/booking.entity';
 
 describe('FlightsService', () => {
