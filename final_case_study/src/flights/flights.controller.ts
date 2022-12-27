@@ -34,10 +34,6 @@ export class FlightsController {
             {
                 return (savedAirline);
             }
-            else 
-            {
-                throw new Error;
-            }
         } catch(e){
             throw new Error("Airline ID does not exist..Error while updating airline record");
         }
@@ -58,7 +54,7 @@ export class FlightsController {
     @Get('/flight/search')
     async searchFlights(@Body() search:searchDto){
         try{
-            const flights= this._flightservice.searchFlightDetails(search);
+            const flights= await this._flightservice.searchFlightDetails(search);
             return flights;
 
         }catch(e){
@@ -69,7 +65,7 @@ export class FlightsController {
     @Post('/flight/booking/:flightid')
     async bookFlight(@Param('flightid', ParseIntPipe) flightid:number, @Body() booking:Booking){
         try{
-            const booking_details= this._flightservice.createBooking(flightid, booking);
+            const booking_details= await this._flightservice.createBooking(flightid, booking);
             return booking_details;
 
         }catch(e){
@@ -80,7 +76,7 @@ export class FlightsController {
     @Get('/flight/ticket/:pnr')
     async getTicket(@Param('pnr') pnr:string){
         try{
-            const ticket_details= this._flightservice.getTicketDetails(pnr);
+            const ticket_details= await this._flightservice.getTicketDetails(pnr);
             return ticket_details;
 
         }catch(e){
@@ -92,7 +88,7 @@ export class FlightsController {
     @Get('/flight/booking/history/:emailId')
     async getHistory(@Param('emailId') emailId:string){
         try{
-            const history_details= this._flightservice.getHistoryDetails(emailId);
+            const history_details= await this._flightservice.getHistoryDetails(emailId);
             return history_details;
 
         }catch(e){

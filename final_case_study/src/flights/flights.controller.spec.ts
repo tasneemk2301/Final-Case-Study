@@ -76,6 +76,18 @@ describe('FlightsController', () => {
     expect(res).toEqual(airline);
 
   });
+
+  it("should raise error when airline record saving fails", async() => {
+
+    const airline:any = {name:"AirIndia", blocked:"no", id: 201};
+
+    const invalid: any = Promise.reject();
+
+    jest.spyOn(_flightService, 'addAirline').mockImplementation(()=> invalid);
+
+    await expect(flightsController.addNewAirline(airline)).rejects.toThrow();
+
+  });
   
   
   it("should update airline blocked status", async() => {
@@ -89,6 +101,20 @@ describe('FlightsController', () => {
     let res:any = await flightsController.updateAirlineStatus(77, airline);
 
     expect(res).toEqual(airline);
+
+  });
+
+  it("should return error if problem in updating airline", async() => {
+
+    const airline:any = {name:"AirIndia", blocked:"yes", id: 77};
+
+    const invalid:any = Promise.reject();
+
+    jest.spyOn(_flightService, 'updateAirline').mockImplementation(()=> "Airline Updated");
+
+    jest.spyOn(_flightService, 'findByAirlineId').mockImplementation(()=> invalid);
+
+    await expect(flightsController.updateAirlineStatus(77,airline)).rejects.toThrow();
 
   });
 
@@ -128,6 +154,45 @@ describe('FlightsController', () => {
     let res:any = await flightsController.createFlight(flight);
 
     expect(res).toEqual(flight);
+
+  });
+
+  it("should return error if problem in creating flight", async() => {
+
+    const flight:any = {
+        flight_id: 342,
+
+        flight_number : "ge789",
+    
+        airline_id : 2,
+
+        airline: {name:"indigo", blocked:"no", id:1},
+    
+        from_place : "delhi",
+    
+        to_place : "pune",
+    
+        start_time : "23/02/2023 17:00",
+    
+        end_time : "23/02/2023 20:10",
+    
+        total_number_of_business_class_seats : "50",
+    
+        total_number_of_nonbusiness_class_seats : "50",
+    
+        ticket_cost : "5000",
+    
+        total_number_of_seats : "100",
+    
+        meal : "veg"
+    
+    };
+
+    const invalid:any = Promise.reject();
+
+    jest.spyOn(_flightService, 'createFlight').mockImplementation(()=> invalid);
+
+    await expect(flightsController.createFlight(flight)).rejects.toThrow();
 
   });
 
@@ -177,6 +242,23 @@ describe('FlightsController', () => {
 
   });
 
+  it("should return error if flights not found based on search", async() =>{
+
+    const search:any = {
+        date: "01/07/25",
+        from_place: "jaipur",
+        to_place: "chennai",
+        round_trip: "no"
+    };
+
+    const invalid:any = Promise.reject();
+
+    jest.spyOn(_flightService, 'searchFlightDetails').mockImplementation(async()=> invalid);
+
+    await expect(()=>flightsController.searchFlights(search)).rejects.toThrow();
+
+  });
+
   it("should save booking details and generate pnr", async() =>{
 
     const booking:any = {
@@ -204,6 +286,34 @@ describe('FlightsController', () => {
     let res:any = await flightsController.bookFlight(789, booking);
 
     expect(res).toHaveProperty("pnr");
+
+  });
+
+  it("should return error if saving booking details fails", async() =>{
+
+    const booking:any = {
+
+        flight_id: 789,
+    
+        booked_by: "mahesh",
+    
+        email: "mahesh@gmail.com",
+    
+        number_of_seats: 2,
+    
+        passengers: [{"name": "suresh", "age":24, "gender":"male"}, {"name": "ramesh", "age":22, "gender":"male"}],
+    
+        selected_meal: "veg",
+    
+        selected_seat_number: null
+    
+    };
+
+    const invalid: any = Promise.reject();
+
+    jest.spyOn(_flightService, 'createBooking').mockImplementation(()=> invalid);
+
+    await expect(flightsController.bookFlight(789, booking)).rejects.toThrow();
 
   });
 
@@ -241,6 +351,16 @@ describe('FlightsController', () => {
 
   });
 
+  it("should return error when ticket being fetched by wrong pnr", async() => {
+    
+    const invalid: any = Promise.reject();
+
+    jest.spyOn(_flightService, "getTicketDetails").mockImplementation(() => invalid);
+
+    await expect(flightsController.getTicket("pbg372")).rejects.toThrow();
+
+  });
+
   it("should get ticket history by emailId", async() =>{
 
     const ticket_history:any = {
@@ -272,6 +392,16 @@ describe('FlightsController', () => {
     let res:any = await flightsController.getHistory("mahesh@gmail.com");
 
     expect(res).toEqual([ticket_history]);
+
+  });
+
+  it("should get error when ticket history is retrieved by wrong emailId", async() =>{
+
+    const invalid: any= Promise.reject();
+
+    jest.spyOn(_flightService, "getHistoryDetails").mockImplementation(async() => invalid);
+
+    await expect(flightsController.getHistory("mahesh@gmail.com")).rejects.toThrow();
 
   });
 
@@ -316,6 +446,26 @@ describe('FlightsController', () => {
     let res:any = await flightsController.cancelBooking("abc816", response);
 
     expect(response.status()).toBe(204);
+
+  });
+
+  it("should get error when cancelling booking by wrong pnr", async() => {
+           
+    let responseObject = {
+        status: 200,
+        message: 'Booking Cancelled'
+    };
+
+    const response: any= {
+        status: jest.fn().mockImplementation().mockReturnValue(204),
+        json: jest.fn().mockImplementation().mockReturnValue(responseObject),
+    } as unknown as Response;
+
+    const invalid:any = Promise.reject();
+
+    jest.spyOn(_flightService, "getBookingDetails").mockImplementation(() => invalid);
+
+    await expect(flightsController.cancelBooking("pws542", response)).rejects.toThrow();
 
   });
 
