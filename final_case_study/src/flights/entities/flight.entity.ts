@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Airline } from './airline.entity';
 
-@Entity()
+@Entity() 
 export class Flight {
   @PrimaryGeneratedColumn()
   flight_id:number;

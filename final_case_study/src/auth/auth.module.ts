@@ -16,7 +16,7 @@ import { LocalStrategy } from './local.strategy';
         expiresIn: "1d",
       },
       secret: jwtConstants.secret,
-      secretOrPrivateKey: jwtConstants.secret,
+      // secretOrPrivateKey: jwtConstants.secret,
     })
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],

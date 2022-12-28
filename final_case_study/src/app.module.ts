@@ -7,6 +7,7 @@ import { AdminModule } from './admin/admin.module';
 import { FlightsModule } from './flights/flights.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { AppService } from './app.service';
 
 @Module({
     imports: [TypeOrmModule.forRoot({
@@ -21,7 +22,7 @@ import { DataSource } from 'typeorm';
     synchronize:true
   }), AdminModule, AuthModule, FlightsModule],
   controllers: [AppController],
-  providers: [AdminService, JwtService],
+  providers: [AdminService, JwtService, AppService],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}

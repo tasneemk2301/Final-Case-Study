@@ -107,6 +107,8 @@ export class FlightsController {
             }           
 
         }catch(e){
+            
+            res.writeHead(400, 'Error in pnr', {'content-type': 'text/plain'});res.end({message: 'Error in pnr'});
             throw new Error("Error in pnr");
         }
 

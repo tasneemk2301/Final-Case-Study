@@ -5,7 +5,7 @@ import { Flight } from './entities/flight.entity';
 import { FlightsController } from './flights.controller';
 import { Airline } from './entities/airline.entity';
 import { Booking } from './entities/booking.entity';
-
+ 
 
 @Module({
   imports: [TypeOrmModule.forFeature([Flight]), TypeOrmModule.forFeature([Airline]), TypeOrmModule.forFeature([Booking])],
